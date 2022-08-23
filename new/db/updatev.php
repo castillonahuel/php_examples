@@ -1,0 +1,118 @@
+<?php
+	if (isset($_GET['id'])){
+		$id=intval($_GET['id']);
+	} else {
+		header("location:../ventas.php");
+	}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CRUD con PHP usando Programación Orientada a Objetos</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round|Open+Sans">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="css/custom.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+    <div class="container">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-8"><h2>Editar <b>Venta</b></h2></div>
+                    <div class="col-sm-4">
+                        <a href="../ventas.php" class="btn btn-info add-new" style="margin-top: 20px;float: right;background: linear-gradient(60deg, #f00, #7b019b);border: none;"><i class="fa fa-arrow-left"></i> Regresar</a>
+                    </div>
+                </div>
+            </div>
+            <?php
+				
+				include ("databasev.php");
+				$ventas= new Database();
+				
+				if(isset($_POST) && !empty($_POST)){
+					$fech = $ventas->sanitize($_POST['fech']);
+					$cli = $ventas->sanitize($_POST['cli']);
+					$mont = $ventas->sanitize($_POST['mont']);
+					$gan = $ventas->sanitize($_POST['gan']);
+					$pag = $ventas->sanitize($_POST['pag']);
+					$sa = $ventas->sanitize($_POST['sa']);
+					$st = $ventas->sanitize($_POST['st']);
+					$id_venta=intval($_POST['id_venta']);
+					$res = $ventas->update($fech, $cli, $mont, $gan, $pag, $sa, $st, $id_venta);
+					if($res){
+						$message= "Datos actualizados con éxito";
+						$class="alert alert-success";
+						header("location:../ventas.php");
+						
+					}else{
+						$message="No se pudieron actualizar los datos";
+						$class="alert alert-danger";
+					}
+					
+					?>
+				<div class="<?php echo $class?>">
+				  <?php echo $message;?>
+				</div>	
+					<?php
+				}
+				$datos_venta=$ventas->single_record($id);
+			?>
+			<div class="row">
+				<form method="post">
+
+				<div class="col-md-6">
+					<label>Fecha:</label>
+					<input type="date" name="fech" id="fech" class='form-control' maxlength="100" required  value="<?php echo $datos_venta->fech;?>">
+					<input type="hidden" name="id_venta" id="id_venta" class='form-control' maxlength="100"   value="<?php echo $datos_venta->id;?>">
+				</div>
+
+				<div class="col-md-6">
+					<label>Cliente:</label>
+					<input type="text" name="cli" id="cli" class='form-control' maxlength="100" required value="<?php echo $datos_venta->cli;?>">
+				</div>
+
+				<div class="col-md-6">
+					<label>Monto:</label>
+					<input type="number" name="mont" id="mont" class='form-control' maxlength="15" required value="<?php echo $datos_venta->mont;?>">
+				</div>
+
+				<div class="col-md-6">
+					<label>Ganancia:</label>
+					<input type="number" name="gan" id="gan" class='form-control' maxlength="64" required value="<?php echo $datos_venta->gan;?>">
+				
+				</div>
+
+				<div class="col-md-6">
+					<label>Pago:</label>
+					<input type="number" name="pag" id="pag" class='form-control' maxlength="64" required value="<?php echo $datos_venta->pag;?>">	
+				</div>
+
+				<div class="col-md-6">
+					<label>Saldo Anterior:</label>
+					<input type="number" name="sa" id="sa" class='form-control' maxlength="64" required value="<?php echo $datos_venta->sa;?>">	
+				</div>
+
+
+				<div class="col-md-12">
+					<label>Saldo Total:</label>
+					<input type="number" name="st" id="st" class='form-control' maxlength="64" required value="<?php echo $datos_venta->st;?>">	
+				</div>
+				
+				<div class="col-md-12 pull-right">
+				<hr>
+					<button type="submit" class="btn btn-success" style="margin-top: 15px;background: linear-gradient(60deg, #f00, #7b019b);border: none;">Actualizar datos</button>
+				</div>
+				</form>
+			</div>
+        </div>
+    </div>     
+</body>
+</html>                            
